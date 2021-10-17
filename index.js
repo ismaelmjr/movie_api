@@ -1,6 +1,9 @@
-const express = require('express');
+const express = require('express'),
+  morgan = require('morgan');
+
 const app = express();
 
+app.use(morgan('common'));
 app.use(express.static('public'));
 
 // Note that app routing is required in any Express application, so you’ll need to define it in your myFlix application. Along with app routing, you’ll also need to define one middleware function for logging your request, and another one for authenticating your users. The order in which you should do so is as follows:
@@ -10,6 +13,7 @@ app.use(express.static('public'));
 // App routing
 // Note that app routing is rarely a single function, rather, multiple functions depending on the number of routes you want to specify for your app. You’ll learn more about user authentication later in this Achievement.
 
+// Created a topBooks list.
 let topBooks = [
   {
     title: "Harry Potter and the Sorcerer's Stone",
@@ -24,7 +28,7 @@ let topBooks = [
     author: 'Stephanie Meyer',
   },
 ];
-
+//Created a topMovies list.
 let topMovies = [
   {
     title: 'The Shawshank Redemption',
@@ -80,4 +84,10 @@ app.get('/movies', (req, res) => {
 // listen for requests
 app.listen(8080, () => {
   console.log('Your app is listening on port 8080.');
+});
+
+// Error Handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
