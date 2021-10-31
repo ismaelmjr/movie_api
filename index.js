@@ -1,7 +1,7 @@
-const express = require('express'),
-  morgan = require('morgan');
+const express = require('express'), // import express files locally to be used within the file.
+  morgan = require('morgan'); 
 
-const app = express();
+const app = express(); //encapsulate express functionality to configure the web server.
 
 app.use(morgan('common')); //Middelware for logger.
 app.use(express.static('public')); //Middleware for static files.
