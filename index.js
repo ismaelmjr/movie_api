@@ -1,10 +1,22 @@
+const bodyParser = require('body-parser');
+
 const express = require('express'), // import express files locally to be used within the file.
-  morgan = require('morgan'); 
+  morgan = require('morgan'), // import morgan logger.
+  body_parser = require('body-parser'), //import body-parser.
+  mongoose = require('mongoose'), // import mongoose.
+  Models = require('./models.js'), // link model.js file.
+  Movies = Models.Movie, // Then import the models from the model.js file to use in my index.js file.
+  Users = Models.User; 
+
+mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true }); // Connect my REST API to the MongoDB database.
 
 const app = express(); //encapsulate express functionality to configure the web server.
 
+
 app.use(morgan('common')); //Middelware for logger.
 app.use(express.static('public')); //Middleware for static files.
+app.use(bodyParser.json()); //Middleware for body parsing.
+app.use(bodyParser.urlencoded({ extended: true}));
 
 // Note that app routing is required in any Express application, so you’ll need to define it in your myFlix application. Along with app routing, you’ll also need to define one middleware function for logging your request, and another one for authenticating your users. The order in which you should do so is as follows:
 
@@ -100,35 +112,65 @@ app.get('/movies/director/:name', (req, res) => {
 });
 
 // POST Request.
-
-// Allow new users to register.
-app.post('/newUser', (req, res) => {
-  res.send('Successful POST request user was able to register.');
+//Add a user
+/* We’ll expect JSON in this format
+{
+  ID: Integer,
+  Username: String,
+  Password: String,
+  Email: String,
+  Birthday: Date
+}*/
+app.post('/users', (req, res) => {
+  // Users.findOne({ Username: req.body.Username }) // check to see if a user already exist. 
+  //   .then((user) => {
+  //     if (user) {
+  //       return res.status(400).send(req.body.Username + 'already exists'); 
+  //     } else {
+  //       Users  
+  //         .create({ // create and register a new user.
+  //           Username: req.body.Username,
+  //           Password: req.body.Password,
+  //           Email: req.body.Email,
+  //           Birthday: req.body.Birthday
+  //         })
+  //         .then((user) =>{res.status(201).json(user) }) // Within this callback, you then send a response back to the client that contains both a status code and the document (called “user”).
+  //       .catch((error) => {
+  //         console.error(error);
+  //         res.status(500).send('Error: ' + error);  //error-handler if anything goes wrong registering a new user. 
+  //       })
+  //     }
+  //   })
+  //   .catch((error) => { // error-handler if anything goes wrong with the HTTP POST.
+  //     console.error(error);
+  //     res.status(500).send('Error: ' + error);
+  //   });
+  res.send('Success!!!');
 });
 
 // Allow users to add a movie to their list of favorites (showing only a text that a movie has been added—more on this later)
-app.post('/newUser/:id/favorites', (req, res) => {
+app.post('/users/:id/favorites', (req, res) => {
   res.send('Successful POST request movie has been added to favorites.');
 });
 
 // PUT Request.
 
 // Allow users to update their user info (username, password, email, date of birth).
-app.put('/newUser/:id/info', (req, res) => {
+app.put('/users/:id/info', (req, res) => {
   res.send('Successful PUT request user info updated.');
 });
 
 // DELETE Request.
 
 // Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed—more on this later)
-app.delete('/newUser/:id/favorites', (req, res) => {
+app.delete('/users/:id/favorites', (req, res) => {
   res.send(
     'Successful DELETE request movie has been deleted from user list of favorites.'
   );
 });
 
 // Allow existing users to deregister
-app.delete('/newUser', (req, res) => {
+app.delete('/users', (req, res) => {
   res.send('Successful DELETE request existing user has been deregistered.');
 });
 
