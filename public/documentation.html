@@ -26,6 +26,16 @@
       <tbody>
         <tr>
           <td>GET</td>
+          <td>/</td>
+          <td>Homepage for myFlix App.</td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/documentation</td>
+          <td>Get Documentation fo myFlix App.</td>
+        </tr>
+        <tr>
+          <td>GET</td>
           <td>/movies</td>
           <td>Return a list of ALL movies to the user.</td>
         </tr>
@@ -39,7 +49,7 @@
         </tr>
         <tr>
           <td>GET</td>
-          <td>/movies/:title/genre</td>
+          <td>/movies/genre/:name</td>
           <td>
             Return data about a genre (description) by name/title (e.g.,
             “Thriller”).
@@ -53,13 +63,27 @@
           </td>
         </tr>
         <tr>
+          <td>GET</td>
+          <td>/newUser</td>
+          <td>
+            Get a list of all the users.
+          </td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/newUser/:user_name</td>
+          <td>
+            Get a user by username.
+          </td>
+        </tr>
+        <tr>
           <td>POST</td>
-          <td>/users</td>
+          <td>/newUser</td>
           <td>Allow new users to register.</td>
         </tr>
         <tr>
           <td>POST</td>
-          <td>/users/:id/favorites</td>
+          <td>/newUser/:user_name/movies/:MovieID</td>
           <td>
             Allow users to add a movie to their list of favorites (showing only
             a text that a movie has been added—more on this later).
@@ -67,12 +91,12 @@
         </tr>
         <tr>
           <td>PUT</td>
-          <td>/users/:id/info</td>
+          <td>/newUser/:user_name</td>
           <td>Allow users to update their user info (username).</td>
         </tr>
         <tr>
           <td>DELETE</td>
-          <td>/users/:id/favorites</td>
+          <td>/newUser/:user_name/movies/:MovieID</td>
           <td>
             Allow users to remove a movie from their list of favorites (showing
             only a text that a movie has been removed—more on this later).
@@ -80,7 +104,7 @@
         </tr>
         <tr>
           <td>DELETE</td>
-          <td>/users</td>
+          <td>/newUser/:user_name</td>
           <td>
             Allow existing users to deregister (showing only a text that a user
             email has been removed—more on this later).
