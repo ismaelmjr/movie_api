@@ -4,11 +4,25 @@ const express = require('express'), // import express files locally to be used w
   bodyParser = require('body-parser'), //import body-parser.
   Models = require('./models.js'); // link model.js file.
 
-
-const Movies = Models.Movie, // Then import the models from the model.js file to use in my index.js file.
-      Users = Models.User;
+  const Movies = Models.Movie, // Then import the models from the model.js file to use in my index.js file.
+  Users = Models.User;
 
 const app = express(); //encapsulate express functionality to configure the web server.
+
+
+const cors = require('cors'); // import Cross Refrence Sharing Resources files into out api.
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+
+app.use(cors({ // function for sharing resources to certain domains otherwise displaying an erro message.
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
+      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+      return callback(new Error(message ), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true }); // Connect my REST API to the MongoDB database.
 
@@ -18,19 +32,9 @@ app.use(morgan('common')); //Middelware for logger.
 app.use(express.static('public')); //Middleware for static files.
 
 
-
 let auth = require('./auth.js')(app); // import auth file into index.js.
 const passport = require('passport'); // require passport into index.js.
 require('./passport.js'); // import passport file into index.js.
-
-
-
-// Note that app routing is required in any Express application, so you’ll need to define it in your myFlix application. Along with app routing, you’ll also need to define one middleware function for logging your request, and another one for authenticating your users. The order in which you should do so is as follows:
-
-// Logging
-// User authentication
-// App routing
-// Note that app routing is rarely a single function, rather, multiple functions depending on the number of routes you want to specify for your app. You’ll learn more about user authentication later in this Achievement.
 
 
 // GET requests
