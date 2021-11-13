@@ -1,22 +1,29 @@
 const express = require('express'), // import express files locally to be used within the file.
-  morgan = require('morgan'); // import morgan logger.
+  morgan = require('morgan'), // import morgan logger.
+  mongoose = require('mongoose'), // import mongoose.
+  bodyParser = require('body-parser'), //import body-parser.
+  Models = require('./models.js'); // link model.js file.
 
- const body_parser = require('body-parser'); //import body-parser.
- const mongoose = require('mongoose'); // import mongoose.
- const Models = require('./models.js'); // link model.js file.
 
-  const Movies = Models.Movie, // Then import the models from the model.js file to use in my index.js file.
-  Users = Models.User;
-
-mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true }); // Connect my REST API to the MongoDB database.
+const Movies = Models.Movie, // Then import the models from the model.js file to use in my index.js file.
+      Users = Models.User;
 
 const app = express(); //encapsulate express functionality to configure the web server.
 
+mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true }); // Connect my REST API to the MongoDB database.
 
+app.use(bodyParser.json()); //Middleware for body parsing.
+app.use(bodyParser.urlencoded({ extended: true}));
 app.use(morgan('common')); //Middelware for logger.
 app.use(express.static('public')); //Middleware for static files.
-app.use(body_parser.json()); //Middleware for body parsing.
-app.use(body_parser.urlencoded({ extended: true}));
+
+
+
+let auth = require('./auth.js')(app); // import auth file into index.js.
+const passport = require('passport'); // require passport into index.js.
+require('./passport.js'); // import passport file into index.js.
+
+
 
 // Note that app routing is required in any Express application, so you’ll need to define it in your myFlix application. Along with app routing, you’ll also need to define one middleware function for logging your request, and another one for authenticating your users. The order in which you should do so is as follows:
 
@@ -39,7 +46,7 @@ app.get('/documentation', (req, res) => {
 });
 
 // Get a list of all the users.
-app.get('/newUser', (req, res) => {
+app.get('/newUser', passport.authenticate('jwt',{session: false}), (req, res) => {
   Users.find()
     .then((users) => {
       res.status(201).json(users);
@@ -51,8 +58,8 @@ app.get('/newUser', (req, res) => {
 });
 
 // Get a user by username
-app.get('/newUser/:user_name', (req, res) => {
-  Users.findOne({ user_name: req.params.user_name })
+app.get('/newUser/:Username', passport.authenticate('jwt',{session: false}), (req, res) => {
+  Users.findOne({ Username : req.params.Username })
     .then((user) => {
       res.json(user);
     })
@@ -63,7 +70,7 @@ app.get('/newUser/:user_name', (req, res) => {
 });
 
 // Get a list of all the movies.
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt',{session: false}), (req, res) => {
   Movies.find()
     .then((movie) => {
       res.status(201).json(movie);
@@ -75,7 +82,7 @@ app.get('/movies', (req, res) => {
 });
 
 // Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title to the user.
-app.get('/movies/:title', (req, res) => {
+app.get('/movies/:title', passport.authenticate('jwt',{session: false}), (req, res) => {
   Movies.findOne({ Title : req.params.title })
     .then((movie) => {
       res.json(movie);
@@ -87,7 +94,7 @@ app.get('/movies/:title', (req, res) => {
 });
 
 // Return data about a genre (description) by name/title (e.g., “Thriller”).
-app.get('/movies/genre/:name', (req, res) => {
+app.get('/movies/genre/:name', passport.authenticate('jwt',{session: false}), (req, res) => {
   Movies.findOne({ "Genre.Name" : req.params.name })
     .then((genre) => {
       res.json(genre);
@@ -100,7 +107,7 @@ app.get('/movies/genre/:name', (req, res) => {
 
 
 // Return data about a director (bio, birth year, death year) by name.
-app.get('/movies/director/:name', (req, res) => {
+app.get('/movies/director/:name', passport.authenticate('jwt',{session: false}), (req, res) => {
   Movies.findOne({ "Director.Name" : req.params.name })
     .then((director) => {
       res.json(director);
@@ -123,17 +130,17 @@ app.get('/movies/director/:name', (req, res) => {
   Birthday: Date
 }*/
 app.post('/newUser', (req, res) => {
-  Users.findOne({ user_name: req.body.user_name }) // check to see if a user already exist. 
+  Users.findOne({ Username : req.body.Username }) // check to see if a user already exist. 
     .then((user) => {
       if (user) {
-        return res.status(400).send(req.body.user_name + ' already exists'); 
+        return res.status(400).send(req.body.Username + ' already exists'); 
       } else {
         Users  
           .create({ // create and register a new user.
-            user_name: req.body.user_name,
+            Username: req.body.Username,
             Password: req.body.Password,
             Email: req.body.Email,
-            birth_day: req.body.birth_day
+            Birthday: req.body.Birthday
           })
           .then((user) =>{res.status(201).json(user) }) // Within this callback, you then send a response back to the client that contains both a status code and the document (called “user”).
         .catch((error) => {
@@ -149,8 +156,8 @@ app.post('/newUser', (req, res) => {
 });
 
 // Add a movie to a user's list of favorites
-app.post('/newUser/:user_name/movies/:MovieID', (req, res) => {
-  Users.findOneAndUpdate({ user_name: req.params.user_name }, {
+app.post('/newUser/:Username/movies/:MovieID', passport.authenticate('jwt',{session: false}), (req, res) => {
+  Users.findOneAndUpdate({ Username : req.params.Username }, {
      $push: { FavoriteMovies: req.params.MovieID }
    },
    { new: true }, // This line makes sure that the updated document is returned
@@ -179,13 +186,13 @@ app.post('/newUser/:user_name/movies/:MovieID', (req, res) => {
   (required)
   Birthday: Date
 }*/
-app.put('/newUser/:user_name', (req, res) => {
-  Users.findOneAndUpdate({ user_name: req.params.user_name }, { $set:
+app.put('/newUser/:Username', passport.authenticate('jwt',{session: false}), (req, res) => {
+  Users.findOneAndUpdate({ Username : req.params.Username }, { $set:
     {
-      user_name: req.body.user_name,
+      Username : req.body.Username,
       Password: req.body.Password,
       Email: req.body.Email,
-      birth_day: req.body.birth_day
+      Birthday: req.body.Birthday
     }
   },
   { new: true }, // This line makes sure that the updated document is returned
@@ -202,8 +209,8 @@ app.put('/newUser/:user_name', (req, res) => {
 // DELETE Request.
 
 // Remove a movie to a user's list of favorites
-app.delete('/newUser/:user_name/movies/:MovieID', (req, res) => {
-  Users.findOneAndUpdate({ user_name: req.params.user_name }, {
+app.delete('/newUser/:Username/movies/:MovieID', passport.authenticate('jwt',{session: false}), (req, res) => {
+  Users.findOneAndUpdate({ Username : req.params.Username }, {
      $pull: { FavoriteMovies: req.params.MovieID }
    },
    { new: true }, // This line makes sure that the updated document is returned
@@ -218,13 +225,13 @@ app.delete('/newUser/:user_name/movies/:MovieID', (req, res) => {
 });
 
 // Delete a user by username
-app.delete('/newUser/:user_name', (req, res) => {
-  Users.findOneAndRemove({ user_name: req.params.user_name })
+app.delete('/newUser/:Username', passport.authenticate('jwt',{session: false}), (req, res) => {
+  Users.findOneAndRemove({ Username : req.params.Username })
     .then((user) => {
       if (!user) {
-        res.status(400).send(req.params.user_name + ' was not found');
+        res.status(400).send(req.params.Username + ' was not found');
       } else {
-        res.status(200).send(req.params.user_name + ' was deleted.');
+        res.status(200).send(req.params.Username + ' was deleted.');
       }
     })
     .catch((err) => {
