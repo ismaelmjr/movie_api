@@ -1,14 +1,14 @@
 
-const passport = require('passport'),
-LocalStrategy = require('passport-local').Strategy,
+const passport = require('passport'), 
+LocalStrategy = require('passport-local').Strategy, //Module for username and password authentication.
 Models = require('./models.js'),
-passportJWT = require('passport-jwt');
+passportJWT = require('passport-jwt'); //Module authenticates endpoits using JSON web token.
 
 let Users = Models.User,
 JWTStrategy = passportJWT.Strategy,
 ExtractJWT = passportJWT.ExtractJwt;
 
-passport.use(new LocalStrategy({
+passport.use(new LocalStrategy({ //Create local strategy that authenticates username and password.
 usernameField: 'Username',
 passwordField: 'Password'
 }, (username, password, callback) => {
@@ -29,7 +29,7 @@ Users.findOne({ Username: username }, (error, user) => {
 });
 }));
 
-passport.use(new JWTStrategy({
+passport.use(new JWTStrategy({ // Create JWTStrategy to authenticate user using JSON tokens.
 jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
 secretOrKey: 'your_jwt_secret'
 }, (jwtPayload, callback) => {
