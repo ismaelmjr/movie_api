@@ -12,7 +12,7 @@ const app = express(); //encapsulate express functionality to configure the web 
 const { check, validationResult } = require('express-validator');
 
 const cors = require('cors'); // import Cross Refrence Sharing Resources files into api.
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'https://topimdbmovies.herokuapp.com'];
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
 
 app.use(cors({ // function for sharing resources to certain domains otherwise displaying an error message.
   origin: (origin, callback) => {
