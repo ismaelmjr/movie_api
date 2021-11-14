@@ -12,7 +12,7 @@ const app = express(); //encapsulate express functionality to configure the web 
 
 // Connect my REST API to the MongoDB database.
 // mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true }); 
-   mongoose.connect( proccess.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true }); 
+   mongoose.connect( 'proccess.env.CONNECTION_URI', { useNewUrlParser: true, useUnifiedTopology: true }); 
 
 
 const { check, validationResult } = require('express-validator');
