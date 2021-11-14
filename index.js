@@ -11,10 +11,10 @@ const app = express(); //encapsulate express functionality to configure the web 
 
 const { check, validationResult } = require('express-validator');
 
-const cors = require('cors'); // import Cross Refrence Sharing Resources files into out api.
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+const cors = require('cors'); // import Cross Refrence Sharing Resources files into api.
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'https://topimdbmovies.herokuapp.com'];
 
-app.use(cors({ // function for sharing resources to certain domains otherwise displaying an erro message.
+app.use(cors({ // function for sharing resources to certain domains otherwise displaying an error message.
   origin: (origin, callback) => {
     if(!origin) return callback(null, true);
     if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
