@@ -64,26 +64,26 @@
         </tr>
         <tr>
           <td>GET</td>
-          <td>/newUser</td>
+          <td>/users</td>
           <td>
             Get a list of all the users.
           </td>
         </tr>
         <tr>
           <td>GET</td>
-          <td>/newUser/:Username</td>
+          <td>/users/:Username</td>
           <td>
             Get a user by username.
           </td>
         </tr>
         <tr>
           <td>POST</td>
-          <td>/newUser</td>
+          <td>/users</td>
           <td>Allow new users to register.</td>
         </tr>
         <tr>
           <td>POST</td>
-          <td>/newUser/:Username/movies/:MovieID</td>
+          <td>/users/:Username/movies/:MovieID</td>
           <td>
             Allow users to add a movie to their list of favorites (showing only
             a text that a movie has been added—more on this later).
@@ -91,12 +91,12 @@
         </tr>
         <tr>
           <td>PUT</td>
-          <td>/newUser/:Username</td>
+          <td>/users/:Username</td>
           <td>Allow users to update their user info (username).</td>
         </tr>
         <tr>
           <td>DELETE</td>
-          <td>/newUser/:Username/movies/:MovieID</td>
+          <td>/users/:Username/movies/:MovieID</td>
           <td>
             Allow users to remove a movie from their list of favorites (showing
             only a text that a movie has been removed—more on this later).
@@ -104,7 +104,7 @@
         </tr>
         <tr>
           <td>DELETE</td>
-          <td>/newUser/:Username</td>
+          <td>/users/:Username</td>
           <td>
             Allow existing users to deregister (showing only a text that a user
             email has been removed—more on this later).
