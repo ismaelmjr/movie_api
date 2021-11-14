@@ -16,7 +16,7 @@ let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
 
 // Connect my REST API to the MongoDB database.
 // mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true }); 
-mongoose.connect(proccess.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true }); 
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true }); 
 
 app.use(cors({ // function for sharing resources to certain domains otherwise displaying an error message.
   origin: (origin, callback) => {
@@ -38,9 +38,6 @@ app.use(express.static('public')); //Middleware for static files.
 let auth = require('./auth.js')(app); // import auth file into index.js.
 const passport = require('passport'); // require passport into index.js.
 require('./passport.js'); // import passport file into index.js.
-
-
-
 
 // GET requests
 
