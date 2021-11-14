@@ -9,6 +9,12 @@ const express = require('express'), // import express files locally to be used w
 
 const app = express(); //encapsulate express functionality to configure the web server.
 
+
+// Connect my REST API to the MongoDB database.
+// mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true }); 
+mongoose.connect(proccess.env.CONNECTION_URI , { useNewUrlParser: true, useUnifiedTopology: true }); 
+
+
 const { check, validationResult } = require('express-validator');
 
 const cors = require('cors'); // import Cross Refrence Sharing Resources files into api.
@@ -24,10 +30,6 @@ app.use(cors({ // function for sharing resources to certain domains otherwise di
     return callback(null, true);
   }
 }));
-
-// Connect my REST API to the MongoDB database.
-// mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true }); 
-   mongoose.connect('proccess.env.CONNECTION_URI', { useNewUrlParser: true, useUnifiedTopology: true }); 
 
 app.use(bodyParser.json()); //Middleware for body parsing.
 app.use(bodyParser.urlencoded({ extended: true}));
