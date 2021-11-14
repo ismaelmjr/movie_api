@@ -25,7 +25,9 @@ app.use(cors({ // function for sharing resources to certain domains otherwise di
   }
 }));
 
-mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true }); // Connect my REST API to the MongoDB database.
+// Connect my REST API to the MongoDB database.
+// mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true }); 
+   mongoose.connect('proccess.env.CONNECTION_URI', { useNewUrlParser: true, useUnifiedTopology: true }); 
 
 app.use(bodyParser.json()); //Middleware for body parsing.
 app.use(bodyParser.urlencoded({ extended: true}));
@@ -271,3 +273,4 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
+
