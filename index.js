@@ -9,12 +9,6 @@ const express = require('express'), // import express files locally to be used w
 
 const app = express(); //encapsulate express functionality to configure the web server.
 
-
-// Connect my REST API to the MongoDB database.
-// mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true }); 
-   mongoose.connect(proccess.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true }); 
-
-
 const { check, validationResult } = require('express-validator');
 
 const cors = require('cors'); // import Cross Refrence Sharing Resources files into api.
@@ -40,6 +34,10 @@ app.use(express.static('public')); //Middleware for static files.
 let auth = require('./auth.js')(app); // import auth file into index.js.
 const passport = require('passport'); // require passport into index.js.
 require('./passport.js'); // import passport file into index.js.
+
+// Connect my REST API to the MongoDB database.
+// mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true }); 
+mongoose.connect(proccess.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true }); 
 
 
 // GET requests
