@@ -16,7 +16,7 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 const { check, validationResult } = require('express-validator');
 
 const cors = require('cors'); // import Cross Refrence Sharing Resources files into api.
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234'];
 
 app.use(cors({ // function for sharing resources to certain domains otherwise displaying an error message.
   origin: (origin, callback) => {
